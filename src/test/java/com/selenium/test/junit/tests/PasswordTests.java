@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 public class PasswordTests {
     private String errorCountOfSymbols = "Пароль должен содержать от 6 до 32 символов";
     private String errorRussianSymbols = "Вы вводите русские буквы";
-    // Символ "/" не поддерживается. Можно использовать символы ! @ $ % ^ & * ( ) _ - +
     // not found: Сликшом легкий пароль
     private String messageMiddleComplexity =  "Пароль средней сложности";
     private String messageMaxComplexity =  "Сложный пароль";
@@ -141,7 +140,8 @@ public class PasswordTests {
             try {
                 String error = "Символ \""+specSymbols[i]+"\" не поддерживается. Можно использовать символы ! @ $ % ^ & * ( ) _ - +";
                 if (ramblerRegisterPage.getMessagePasswordStringText().equals(error))
-                assertTrue("Element 'errorMailbox' is not found, not expected: " + error, false);
+                assertTrue("Error is not expected: " + ramblerRegisterPage.getMessagePasswordStringText() + ". It should be: " + error, false);
+
             } catch (Exception e) {
                 assertTrue("Element 'messagePassword' is not found" , false);
             }

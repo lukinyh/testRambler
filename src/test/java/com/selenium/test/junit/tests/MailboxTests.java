@@ -114,6 +114,31 @@ public class MailboxTests {
     }
 
     @Test
+    // содержит подчекивание внутри логина
+    public void testUnderlineInside() {
+        ramblerRegisterPage.insertMailboxString("nata_lies");
+        ramblerRegisterPage.removeCursorFromMailboxField();
+        checkingExistingError();
+    }
+
+
+    @Test
+    // содержит два спецсимвола подряд внутри логина
+    public void testDoubleSpecSymbols() {String[] specSymbols = {"..", "--", "__"};
+        int lengthMass;
+        lengthMass = specSymbols.length;
+        for (int i = 0; i < lengthMass; i = i + 1){
+            ramblerRegisterPage.insertMailboxString(String.format("nata%slies", specSymbols[i]));
+            ramblerRegisterPage.removeCursorFromMailboxField();
+            try {
+                checkingError(errorInvalidLogin);
+            } catch (Exception e) {
+                assertTrue("Element 'errorMailbox' is not found, expected: " + errorInvalidLogin, false);
+            }
+        }
+    }
+
+    @Test
     // содержит число в логине
     public void testNumbersInside() {
         ramblerRegisterPage.insertMailboxString("4natalies4");
@@ -134,6 +159,19 @@ public class MailboxTests {
     // слишком много символов
     public void testTooManySymbols() {
         ramblerRegisterPage.insertMailboxString("01234567890123456789012345678901234");
+        ramblerRegisterPage.removeCursorFromMailboxField();
+        try {
+            checkingError(errorCountOfSymbols);
+        } catch (Exception e) {
+            assertTrue("Element 'errorMailbox' is not found, expected: " + errorCountOfSymbols, false);
+        }
+    }
+
+    @Test
+    // слишком мало символов
+    public void testNotEnoughSymbols() {
+        // не уверена, что такого пользователя у них нет, но считаю, что ошибка должна быть сначала по количеству символов:
+        ramblerRegisterPage.insertMailboxString("ff");
         ramblerRegisterPage.removeCursorFromMailboxField();
         try {
             checkingError(errorCountOfSymbols);
